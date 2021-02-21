@@ -11,10 +11,6 @@ class Category(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), index=True)
 
-# construct a Table directly.  The Base.metadata collection is
-# usually a good choice for MetaData but any MetaData
-# collection may be used.
-
 class Serie(Base):
     __tablename__ = "serie"
     id = Column(Integer, primary_key=True, index=True)

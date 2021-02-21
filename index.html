@@ -339,6 +339,71 @@ Gran fan de Python.
 <h2>Creamos la Base de Datos</h2>
 <p>Diagrama E-R</p>
 <p><img src="seriesfliz.png" width="50%"></img></p>
+</section><section id="librería-de-acceso" class="slide level2">
+<h2>Librería de acceso</h2>
+<p>Usaremos la librería <a href="https://www.sqlalchemy.org/">SQLAlchemy</a> pero cualquiera otra librería sería perfectamente posible.</p>
+<p>Ventajas: Admite todo tipo de Base de Datos sólo cambiando la URL de conexión con la BD:</p>
+<ul>
+<li>MySQL</li>
+<li>Postgres.</li>
+<li>SQLite.</li>
+<li>…</li>
+</ul>
+</section><section id="definimos-los-modelos" class="slide level2">
+<h2>Definimos los modelos</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">class</span> Category(Base):</a>
+<a class="sourceLine" id="cb17-2" title="2">    __tablename__ <span class="op">=</span> <span class="st">&quot;category&quot;</span></a>
+<a class="sourceLine" id="cb17-3" title="3">    <span class="bu">id</span> <span class="op">=</span> Column(Integer, primary_key<span class="op">=</span><span class="va">True</span>, index<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb17-4" title="4">    name <span class="op">=</span> Column(String(<span class="dv">255</span>), index<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb17-5" title="5"></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="kw">class</span> Serie(Base):</a>
+<a class="sourceLine" id="cb17-7" title="7">    __tablename__ <span class="op">=</span> <span class="st">&quot;serie&quot;</span></a>
+<a class="sourceLine" id="cb17-8" title="8">    <span class="bu">id</span> <span class="op">=</span> Column(Integer, primary_key<span class="op">=</span><span class="va">True</span>, index<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb17-9" title="9">    title <span class="op">=</span> Column(String, index<span class="op">=</span><span class="va">True</span>)</a>
+<a class="sourceLine" id="cb17-10" title="10">    description  <span class="op">=</span> Column(String)</a>
+<a class="sourceLine" id="cb17-11" title="11">    category_id <span class="op">=</span> Column(Integer, ForeignKey(<span class="st">&#39;category.id&#39;</span>))</a>
+<a class="sourceLine" id="cb17-12" title="12">    category <span class="op">=</span> relationship(<span class="st">&#39;Category&#39;</span>)</a></code></pre></div>
+</section><section id="configuramos-la-base-de-datos" class="slide level2">
+<h2>Configuramos la Base de Datos</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb18-1" title="1">SQLALCHEMY_DATABASE_URL <span class="op">=</span> <span class="st">&quot;sqlite:///series.db&quot;</span></a>
+<a class="sourceLine" id="cb18-2" title="2"></a>
+<a class="sourceLine" id="cb18-3" title="3">engine <span class="op">=</span> create_engine(SQLALCHEMY_DATABASE_URL)</a>
+<a class="sourceLine" id="cb18-4" title="4">Session <span class="op">=</span> sessionmaker(autocommit<span class="op">=</span><span class="va">False</span>, autoflush<span class="op">=</span><span class="va">False</span>, bind<span class="op">=</span>engine)</a>
+<a class="sourceLine" id="cb18-5" title="5"></a>
+<a class="sourceLine" id="cb18-6" title="6"><span class="kw">def</span> get_db():</a>
+<a class="sourceLine" id="cb18-7" title="7">    <span class="cf">try</span>:</a>
+<a class="sourceLine" id="cb18-8" title="8">        db <span class="op">=</span> Session()</a>
+<a class="sourceLine" id="cb18-9" title="9">        <span class="cf">yield</span> db</a>
+<a class="sourceLine" id="cb18-10" title="10">    <span class="cf">finally</span>:</a>
+<a class="sourceLine" id="cb18-11" title="11">        db.close()</a></code></pre></div>
+</section><section id="modificamos-la-consulta-de-categorias" class="slide level2">
+<h2>Modificamos la consulta de Categorias</h2>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb19-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/categories&quot;</span>)</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">def</span> categories(db: Session <span class="op">=</span> Depends(get_db)):</a>
+<a class="sourceLine" id="cb19-3" title="3">    <span class="co"># Leo todas las categorías</span></a>
+<a class="sourceLine" id="cb19-4" title="4">    categories <span class="op">=</span> db.query(models.Category).<span class="bu">all</span>()</a>
+<a class="sourceLine" id="cb19-5" title="5">    <span class="co"># Leo las categorías usando la sintaxis ORM de SQLAlchemy</span></a>
+<a class="sourceLine" id="cb19-6" title="6">    cats <span class="op">=</span> [schema.Category(<span class="bu">id</span><span class="op">=</span><span class="bu">id</span>, name<span class="op">=</span>category.name) <span class="cf">for</span> <span class="bu">id</span>, category <span class="kw">in</span> <span class="bu">enumerate</span>(categories)]</a>
+<a class="sourceLine" id="cb19-7" title="7">    <span class="cf">return</span> {<span class="st">&quot;categories&quot;</span>: cats}</a></code></pre></div>
+</section><section id="modificamos-la-consulta-de-series" class="slide level2">
+<h2>Modificamos la consulta de Series</h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb20-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/series/</span><span class="sc">{category_str}</span><span class="st">&quot;</span>, response_model<span class="op">=</span>List[schema.Serie])</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw">def</span> series(category_str: <span class="bu">str</span>, db: Session <span class="op">=</span> Depends(get_db)):</a>
+<a class="sourceLine" id="cb20-3" title="3">    category <span class="op">=</span> db.query(models.Category).filter_by(name<span class="op">=</span>category_str).first()</a>
+<a class="sourceLine" id="cb20-4" title="4"></a>
+<a class="sourceLine" id="cb20-5" title="5">    <span class="cf">if</span> category <span class="kw">is</span> <span class="va">None</span>:</a>
+<a class="sourceLine" id="cb20-6" title="6">        <span class="cf">return</span> []</a>
+<a class="sourceLine" id="cb20-7" title="7">    <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb20-8" title="8">        series_db <span class="op">=</span> db.query(models.Serie).join(models.Category).<span class="bu">filter</span>(models.Category.<span class="bu">id</span><span class="op">==</span>category.<span class="bu">id</span>).<span class="bu">all</span>()</a>
+<a class="sourceLine" id="cb20-9" title="9">        series <span class="op">=</span> [schema.Serie(title<span class="op">=</span>serie.title, description<span class="op">=</span>serie.description, category<span class="op">=</span>category_str) <span class="cf">for</span> serie <span class="kw">in</span> series_db]</a>
+<a class="sourceLine" id="cb20-10" title="10">        <span class="bu">print</span>(series)</a>
+<a class="sourceLine" id="cb20-11" title="11">        <span class="cf">return</span> series</a></code></pre></div>
+</section><section id="hay-que-modificar-la-web-html" class="slide level2">
+<h2>¿Hay que modificar la web HTML?</h2>
+<p><span class="fragment visible highlight-red">No, no hay que hacerlo</span>, ambos componentes son <span class="fragment visible highlight-blue">débilmente acoplados</span></p>
+</section><section id="alguna-pregunta" class="slide level2">
+<h2>¿Alguna pregunta?</h2>
+<p><img src="preguntas.jpg" width="70%"></img></p>
 </section></section>
     </div>
   </div>

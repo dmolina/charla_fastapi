@@ -36,7 +36,9 @@ def get_db():
 
 @app.get("/categories")
 def categories(db: Session = Depends(get_db)):
+    # Leo todas las categorías
     categories = db.query(models.Category).all()
+    # Leo las categorías usando la sintaxis ORM de SQLAlchemy
     cats = [schema.Category(id=id, name=category.name) for id, category in enumerate(categories)]
     return {"categories": cats}
 

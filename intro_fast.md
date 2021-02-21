@@ -354,3 +354,97 @@ def series(category: Category):
 Diagrama E-R
 
 <img src="seriesfliz.png" width="50%"></img>
+
+---
+
+## Librería de acceso
+
+Usaremos la librería [SQLAlchemy](https://www.sqlalchemy.org/) pero cualquiera
+otra librería sería perfectamente posible.
+
+Ventajas: Admite todo tipo de Base de Datos sólo cambiando la URL de conexión
+con la BD:
+
+- MySQL
+- Postgres.
+- SQLite.
+- ...
+          
+---
+
+## Definimos los modelos
+
+```python
+class Category(Base):
+    __tablename__ = "category"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), index=True)
+
+class Serie(Base):
+    __tablename__ = "serie"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description  = Column(String)
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship('Category')
+```
+---
+
+## Configuramos la Base de Datos
+
+```python
+SQLALCHEMY_DATABASE_URL = "sqlite:///series.db"
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    try:
+        db = Session()
+        yield db
+    finally:
+        db.close()
+```
+
+---
+
+## Modificamos la consulta de Categorias
+
+```python
+@app.get("/categories")
+def categories(db: Session = Depends(get_db)):
+    # Leo todas las categorías
+    categories = db.query(models.Category).all()
+    # Leo las categorías usando la sintaxis ORM de SQLAlchemy
+    cats = [schema.Category(id=id, name=category.name) for id, category in enumerate(categories)]
+    return {"categories": cats}
+```
+
+---
+
+## Modificamos la consulta de Series
+
+```python
+@app.get("/series/{category_str}", response_model=List[schema.Serie])
+def series(category_str: str, db: Session = Depends(get_db)):
+    category = db.query(models.Category).filter_by(name=category_str).first()
+
+    if category is None:
+        return []
+    else:
+        series_db = db.query(models.Serie).join(models.Category).filter(models.Category.id==category.id).all()
+        series = [schema.Serie(title=serie.title, description=serie.description, category=category_str) for serie in series_db]
+        print(series)
+        return series
+```
+
+---
+
+## ¿Hay que modificar la web HTML?
+
+<span class="fragment visible highlight-red">No, no hay que hacerlo</span>,
+ambos componentes son <span class="fragment visible  highlight-blue">débilmente acoplados</span>
+
+## ¿Alguna pregunta?
+
+<img src="preguntas.jpg" width="70%"></img>
