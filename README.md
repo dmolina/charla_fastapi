@@ -1,6 +1,7 @@
 # Charla sobre FastAPI
 
-Talk in Spanish about FastAPI (Charla en Español sobre FastAPI)
+ Charla en Español sobre [FastAPI](https://fastapi.tiangolo.com/es/) (Talk in
+ Spanish about [FastAPI](https://fastapi.tiangolo.com/es/))
 
 ## Directorios
 
