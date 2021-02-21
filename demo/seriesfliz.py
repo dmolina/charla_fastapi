@@ -29,11 +29,11 @@ class Category(str, Enum):
 
 @app.get("/categories")
 def hello():
-    return {"categories": [{'id': 0, 'text': "Comedy"}, {'id': 1, 'text': "Drama"}, {'id': 2, 'text': 'Musical'}]}
+    return {"categories": [{'id': 0, 'name': "Comedy"}, {'id': 1, 'name': "Drama"}, {'id': 2, 'name': 'Musical'}]}
 
 @app.get("/categories")
 def hello():
-    return {"categories": [{'id': 0, 'text': "Comedy"}, {'id': 1, 'text': "Drama"}, {'id': 2, 'text': 'Musical'}]}
+    return {"categories": [{'id': 0, 'name': "Comedy"}, {'id': 1, 'name': "Drama"}, {'id': 2, 'name': 'Musical'}]}
 
 class Serie(BaseModel):
     title: str
@@ -43,11 +43,9 @@ class Serie(BaseModel):
 # Comprueba que sea un valor válido
 @app.get("/series/{category}", response_model=List[Serie])
 def series(category: Category):
-    mejor_imposible = Serie(title="Mejor imposible", description="Mejor imposible", category=Category.Comedy)
-    print(category)
+    series = [Serie(title="The Big Bang Theory",
+                    description="Serie de frikis", category=Category.Comedy),
+              Serie(title="Juego de Tronos",
+                    description="Todos mueren", category=Category.Drama)]
 
-    if category == Category.Comedy:
-        print("Mejor")
-        return [mejor_imposible]
-    else:
-        return []
+    return [serie for serie in series if serie.category == category]

@@ -26,13 +26,13 @@
                 <h1>Listado de las Categorías:</h1>
                 <ul>
              <li v-for="category in categories">
-                 <strong>{{category.text}}</strong>
+                 <strong>{{category.name}}</strong>
              </li>
              </ul>
              <h2>Selecciona una categoría para ver las series:</h2>
              <select v-model="selected" change="onChange(this.value)">
                      <option v-for="category in categories" :key="category.id">
-                         {{category.text}}
+                         {{category.name}}
                      </option>
              </select>
 
