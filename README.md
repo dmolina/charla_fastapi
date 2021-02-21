@@ -16,11 +16,11 @@ instalar con:
 
 ```sh
 $ pip install poetry # Para gestionar dependencias
-$ cd demo # Ir a la 
+$ cd demo # Ir al directorio de los recursos webs
 $ poetry install # Instala las dependencias necesarias
 ```
 
-## Ejecutar
+## Ejecutación
 
 Para lanzar los servicios REST es necesario ejecutar:
 
@@ -43,10 +43,6 @@ para ejectarlo también se puede usar:
 ```sh
 $ python server.py
 ```
-
-
-
-
 
 La web de ejemplo es totalmente estática, solo requiere JavaScript. Para
 ejecutarlo se puede usar el siguiente comando en el directorio del proyecto:
