@@ -7,4 +7,4 @@ class Category(BaseModel):
 class Serie(BaseModel):
     title: str
     description: str
-    category: Category
+    category: str

@@ -39,3 +39,15 @@ def categories(db: Session = Depends(get_db)):
     categories = db.query(models.Category).all()
     cats = [schema.Category(id=id, name=category.name) for id, category in enumerate(categories)]
     return {"categories": cats}
+
+@app.get("/series/{category_str}", response_model=List[schema.Serie])
+def series(category_str: str, db: Session = Depends(get_db)):
+    category = db.query(models.Category).filter_by(name=category_str).first()
+
+    if category is None:
+        return []
+    else:
+        series_db = db.query(models.Serie).join(models.Category).filter(models.Category.id==category.id).all()
+        series = [schema.Serie(title=serie.title, description=serie.description, category=category_str) for serie in series_db]
+        print(series)
+        return series

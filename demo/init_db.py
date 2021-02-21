@@ -13,7 +13,12 @@ def main():
     session.add(comedy)
     session.add(drama)
     session.add(Category(name="Musical"))
+    session.add(Serie(title="The Big Bang Theory",
+                      description="Serie de frikis", category=comedy))
+    session.add(Serie(title="Juego de Tronos", description="Todos mueren",
+                      category=drama))
     session.commit()
+
 
 if __name__ == '__main__':
     main()
