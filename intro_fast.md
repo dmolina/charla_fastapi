@@ -253,8 +253,104 @@ app = new Vue({
 });
 ```
 
---
+---
 
 ## Resultado
 
 <img src="categorias.png" width="80%"></img>
+
+---
+
+## Mayor seguridad
+
+Para restringir las peticiones se puede utilizar CORS:
+
+```python
+app = FastAPI()
+
+origins = [
+    "http://localhost:8100",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+---
+
+## Caso 2: Listado de Series por Categoría
+
+Vamos a asegurar de listar una categoría existente.
+
+Para ello creamos un enumerado:
+
+```python
+from enum import Enum
+
+class Category(str, Enum):
+    Comedy = "Comedy"
+    Drama = "Drama"
+    Musical = "Musical"
+```
+
+---
+
+## Listado de Series por Categoría
+
+Ahora poder indicar que el parámetro aceptable es de ese tipo:
+
+```python
+# Comprueba que sea un valor válido
+@app.get("/series/{category}")
+def series(category: Category):
+    pass
+```
+
+Si es una categoría de las válidas devuelve un JSON de error directamente.
+
+---
+
+## Listado de Series por Categoría
+
+Creamos la estructura con la información de la serie:
+
+```python
+class Serie(BaseModel):
+    title: str
+    description: str
+    category: Category
+```
+
+Por ahora solo en memoria, luego diremos cómo obtenerlo de la BD.
+
+---
+
+## Listado de Series por Categoría
+
+Indicamos el modelo de respuesta, y algún ejemplo a mano:
+
+```python
+# List es de typing
+@app.get("/series/{category}", response_model=List[Serie])
+def series(category: Category):
+def series(category: Category):
+    series = [Serie(title="The Big Bang Theory",
+                    description="Serie de frikis", category=Category.Comedy),
+              Serie(title="Juego de Tronos",
+                    description="Todos mueren", category=Category.Drama)]
+
+    return [serie for serie in series if serie.category == category]
+```
+
+# Añadiendo BD al ejemplo anterior
+
+## Creamos la Base de Datos
+
+Diagrama E-R
+
+<img src="seriesfliz.png" width="50%"></img>

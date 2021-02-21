@@ -276,10 +276,69 @@ Gran fan de Python.
 <a class="sourceLine" id="cb11-14" title="14">        <span class="op">}</span></a>
 <a class="sourceLine" id="cb11-15" title="15">    <span class="op">}</span></a>
 <a class="sourceLine" id="cb11-16" title="16"><span class="op">}</span>)<span class="op">;</span></a></code></pre></div>
-<p>–</p>
 </section><section id="resultado" class="slide level2">
 <h2>Resultado</h2>
 <p><img src="categorias.png" width="80%"></img></p>
+</section><section id="mayor-seguridad" class="slide level2">
+<h2>Mayor seguridad</h2>
+<p>Para restringir las peticiones se puede utilizar CORS:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb12-1" title="1">app <span class="op">=</span> FastAPI()</a>
+<a class="sourceLine" id="cb12-2" title="2"></a>
+<a class="sourceLine" id="cb12-3" title="3">origins <span class="op">=</span> [</a>
+<a class="sourceLine" id="cb12-4" title="4">    <span class="st">&quot;http://localhost:8100&quot;</span>,</a>
+<a class="sourceLine" id="cb12-5" title="5">]</a>
+<a class="sourceLine" id="cb12-6" title="6"></a>
+<a class="sourceLine" id="cb12-7" title="7">app.add_middleware(</a>
+<a class="sourceLine" id="cb12-8" title="8">    CORSMiddleware,</a>
+<a class="sourceLine" id="cb12-9" title="9">    allow_origins<span class="op">=</span>origins,</a>
+<a class="sourceLine" id="cb12-10" title="10">    allow_credentials<span class="op">=</span><span class="va">True</span>,</a>
+<a class="sourceLine" id="cb12-11" title="11">    allow_methods<span class="op">=</span>[<span class="st">&quot;*&quot;</span>],</a>
+<a class="sourceLine" id="cb12-12" title="12">    allow_headers<span class="op">=</span>[<span class="st">&quot;*&quot;</span>],</a>
+<a class="sourceLine" id="cb12-13" title="13">)</a></code></pre></div>
+</section><section id="caso-2-listado-de-series-por-categoría" class="slide level2">
+<h2>Caso 2: Listado de Series por Categoría</h2>
+<p>Vamos a asegurar de listar una categoría existente.</p>
+<p>Para ello creamos un enumerado:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb13-1" title="1"><span class="im">from</span> enum <span class="im">import</span> Enum</a>
+<a class="sourceLine" id="cb13-2" title="2"></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="kw">class</span> Category(<span class="bu">str</span>, Enum):</a>
+<a class="sourceLine" id="cb13-4" title="4">    Comedy <span class="op">=</span> <span class="st">&quot;Comedy&quot;</span></a>
+<a class="sourceLine" id="cb13-5" title="5">    Drama <span class="op">=</span> <span class="st">&quot;Drama&quot;</span></a>
+<a class="sourceLine" id="cb13-6" title="6">    Musical <span class="op">=</span> <span class="st">&quot;Musical&quot;</span></a></code></pre></div>
+</section><section id="listado-de-series-por-categoría" class="slide level2">
+<h2>Listado de Series por Categoría</h2>
+<p>Ahora poder indicar que el parámetro aceptable es de ese tipo:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb14-1" title="1"><span class="co"># Comprueba que sea un valor válido</span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="at">@app.get</span>(<span class="st">&quot;/series/</span><span class="sc">{category}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="kw">def</span> series(category: Category):</a>
+<a class="sourceLine" id="cb14-4" title="4">    <span class="cf">pass</span></a></code></pre></div>
+<p>Si es una categoría de las válidas devuelve un JSON de error directamente.</p>
+</section><section id="listado-de-series-por-categoría-1" class="slide level2">
+<h2>Listado de Series por Categoría</h2>
+<p>Creamos la estructura con la información de la serie:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">class</span> Serie(BaseModel):</a>
+<a class="sourceLine" id="cb15-2" title="2">    title: <span class="bu">str</span></a>
+<a class="sourceLine" id="cb15-3" title="3">    description: <span class="bu">str</span></a>
+<a class="sourceLine" id="cb15-4" title="4">    category: Category</a></code></pre></div>
+<p>Por ahora solo en memoria, luego diremos cómo obtenerlo de la BD.</p>
+</section><section id="listado-de-series-por-categoría-2" class="slide level2">
+<h2>Listado de Series por Categoría</h2>
+<p>Indicamos el modelo de respuesta, y algún ejemplo a mano:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># List es de typing</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="at">@app.get</span>(<span class="st">&quot;/series/</span><span class="sc">{category}</span><span class="st">&quot;</span>, response_model<span class="op">=</span>List[Serie])</a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="kw">def</span> series(category: Category):</a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="kw">def</span> series(category: Category):</a>
+<a class="sourceLine" id="cb16-5" title="5">    series <span class="op">=</span> [Serie(title<span class="op">=</span><span class="st">&quot;The Big Bang Theory&quot;</span>,</a>
+<a class="sourceLine" id="cb16-6" title="6">                    description<span class="op">=</span><span class="st">&quot;Serie de frikis&quot;</span>, category<span class="op">=</span>Category.Comedy),</a>
+<a class="sourceLine" id="cb16-7" title="7">              Serie(title<span class="op">=</span><span class="st">&quot;Juego de Tronos&quot;</span>,</a>
+<a class="sourceLine" id="cb16-8" title="8">                    description<span class="op">=</span><span class="st">&quot;Todos mueren&quot;</span>, category<span class="op">=</span>Category.Drama)]</a>
+<a class="sourceLine" id="cb16-9" title="9"></a>
+<a class="sourceLine" id="cb16-10" title="10">    <span class="cf">return</span> [serie <span class="cf">for</span> serie <span class="kw">in</span> series <span class="cf">if</span> serie.category <span class="op">==</span> category]</a></code></pre></div>
+</section></section>
+<section><section id="añadiendo-bd-al-ejemplo-anterior" class="title-slide slide level1"><h1>Añadiendo BD al ejemplo anterior</h1></section><section id="creamos-la-base-de-datos" class="slide level2">
+<h2>Creamos la Base de Datos</h2>
+<p>Diagrama E-R</p>
+<p><img src="seriesfliz.png" width="50%"></img></p>
 </section></section>
     </div>
   </div>
