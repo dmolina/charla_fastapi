@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="//unpkg.com/vue"></script>
+        <!-- axios -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <title>Ejemplo de acceso remoto</title>
+        </head>
+            <body style="margin-bottom: 28px !important;">
+                <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
+                    <p class="h3 my-0 me-md-auto fw-normal">SeriesFliz</p>
+                    <nav class="my-2 my-md-0 me-md-3">
+                        <a class="p-2 text-dark" href="#">Series</a>
+                        <a class="p-2 text-dark" href="#">Darme de alta</a>
+                        <a class="p-2 text-dark" href="#">Atención al cliente</a>
+                        <a class="p-2 text-dark" href="#">Precios</a>
+                    </nav>
+                    <!-- <a class="btn btn-outline-primary" href="#">Sign up</a> -->
+                </header>
+            <div id="app" class="ms-4">
+                <h1>Listado de las Categorías:</h1>
+                <ul>
+             <li v-for="category in categories">
+                 <strong>{{category.text}}</strong>
+             </li>
+             </ul>
+             <h2>Selecciona una categoría para ver las series:</h2>
+             <select v-model="selected" change="onChange(this.value)">
+                     <option v-for="category in categories" :key="category.id">
+                         {{category.text}}
+                     </option>
+             </select>
+
+             <div v-if="selected > ''">
+                 <h2>Series</h2>
+                 <p>
+                     Has elegido la categoría: {{selected}}
+                     <div v-if="misseries.length == 0">
+                         No hay series en esa categoría.
+                     </div>
+                     <ul>
+                     <li v-for="serie in misseries">
+                         Title: {{serie.title}}
+                     </li>
+                     </ul>
+                 </p>
+             </div>
+            </div>
+             <script src="./app.js"></script>
+            </body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Daniel Molina Cabrera">
+  <title>Servicios REST con FastAPI</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.1//css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.1//css/theme/sky.css" id="theme">
+  <link rel="stylesheet" href="custom.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://unpkg.com/reveal.js@3.9.1//css/print/pdf.css' : 'https://unpkg.com/reveal.js@3.9.1//css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://unpkg.com/reveal.js@3.9.1//lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section id="servicios-rest-con" class="slide level2">
+<h2>Servicios REST con</h2>
+<p><img src="slides/FastAPI.jpg" width="30%"></img><br></p>
+<center>
+Daniel Molina Cabrera<br> (http://dmolina.github.io)
+</center>
+</section>
+<section id="quién-soy-yo" class="slide level2">
+<h2>¿Quién soy yo?</h2>
+<ul style="margin=300px">
+<li>
+Profesor Titular de Informática de la Universidad de Granada
+</li>
+<li>
+Experto en Inteligencia Artificial.
+</li>
+<li>
+Desarrollador/Usuario de Python durante más de 10 años.
+</li>
+</ul>
+<p><img src="yo_serio.png" width="20%" style="float: center"/></p>
+</section>
+<section id="quién-soy-yo-1" class="slide level2">
+<h2>¿Quién soy yo?</h2>
+<ul style="margin=300px">
+<li>
+Partidario convencido del Software Libre
+</li>
+<li>
+<i>Linuxero</i> convencido.
+</li>
+<li>
+Gran fan de Python.
+</li>
+</ul>
+<p><img src="yo_indiana.jpg" width="30%" style="float: center"></img></p>
+</section>
+<section><section id="servicios-rest" class="title-slide slide level1"><h1>Servicios REST</h1></section><section id="qué-son-servicios-rest" class="slide level2">
+<h2>¿Qué son servicios REST?</h2>
+<p><img src="rest.png" alt="Servicio REST"/></p>
+</section><section id="qué-son-servicios-rest-1" class="slide level2">
+<h2>¿Qué son servicios REST?</h2>
+<p><img src="rest_imagen.png" alt="Esquema REST"/></p>
+</section><section id="ventajas-de-los-servicios-rest" class="slide level2">
+<h2>Ventajas de los servicios REST</h2>
+<ul>
+<li><p>Distinto lenguaje de <i>frontend</i> y de <i>backend</i>.</p></li>
+<li><p>Fácil y cómodo.</p></li>
+<li><p>Modelo multi-servicios.</p></li>
+<li><p>Cada vez más usados con frameworks JS.</p></li>
+</ul>
+</section></section>
+<section><section id="fastapi" class="title-slide slide level1"><h1>FastAPI</h1></section><section id="qué-es-fastapi" class="slide level2">
+<h2>¿Qué es FastAPI?</h2>
+<p><img src="slides/FastAPI.jpg" width="30%"></img><br></p>
+<ul>
+<li><p>Librería en <strong>Python</strong> para servicios <strong>REST</strong>.</p></li>
+<li><p>Fácil de usar, y centrada en lo usado.</p></li>
+</ul>
+</section><section id="qué-es-python" class="slide level2">
+<h2>¿Qué es Python?</h2>
+<p>Lenguaje de programación</p>
+<p>de <span class="fragment visible highlight-blue">propósito general</span> y <span class="fragment visible highlight-red">fácil de aprender</span>.</p>
+</section><section id="por-qué-es-popular" class="slide level2">
+<h2>¿Por qué es popular?</h2>
+<p>Es muy sencillo y legible</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" title="1">msg <span class="op">=</span> <span class="st">&quot;Hola a todos&quot;</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="bu">print</span>(msg)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="bu">print</span>(msg.replace(<span class="st">&quot;os&quot;</span>, <span class="st">&quot;as&quot;</span>))</a>
+<a class="sourceLine" id="cb1-4" title="4"></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="cf">for</span> name <span class="kw">in</span> [<span class="st">&quot;Amalia&quot;</span>, <span class="st">&quot;Arturo&quot;</span>]:</a>
+<a class="sourceLine" id="cb1-6" title="6">    <span class="bu">print</span>(<span class="ss">f&quot;a </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> también&quot;</span>)</a></code></pre></div>
+</section><section id="es-muy-potente" class="slide level2">
+<h2>Es muy potente</h2>
+<ul>
+<li>Repositorio centralizado de librerías.</li>
+<li>Librerías para casi todo.</li>
+</ul>
+<p><img src="slides/box_python.png" class="plain" width="50%"></p>
+</section></section>
+<section><section id="demo-de-fastapi" class="title-slide slide level1"><h1>demo de FastAPI</h1></section><section class="slide level2">
+
+<h3 id="muy-sencillo">Muy Sencillo</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" title="1"><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3">app <span class="op">=</span> FastAPI()</a>
+<a class="sourceLine" id="cb2-4" title="4"></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="at">@app.get</span>(<span class="st">&quot;/&quot;</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw">def</span> hello():</a>
+<a class="sourceLine" id="cb2-7" title="7">    <span class="cf">return</span> {<span class="st">&quot;msg&quot;</span>: <span class="st">&quot;Hola a todo el  mundo&quot;</span>}</a></code></pre></div>
+</section><section id="ejecutándolo" class="slide level2">
+<h2>Ejecutándolo</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" title="1"><span class="ex">unicorn</span> test:app --reload</a>
+<a class="sourceLine" id="cb3-2" title="2">ó</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="ex">hypercorn</span> test:app --reload</a></code></pre></div>
+</section><section id="documentación" class="slide level2">
+<h2>Documentación</h2>
+<p><img src="docs.png" width="60%"></img></p>
+</section><section class="slide level2">
+
+<h3 id="lectura-de-parámetros">Lectura de parámetros</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/hello/</span><span class="sc">{name}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">def</span>  hello(name):</a>
+<a class="sourceLine" id="cb4-3" title="3">    <span class="cf">return</span> {<span class="st">&quot;msg&quot;</span>: <span class="ss">f&quot;Hola, </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">&quot;</span>}</a></code></pre></div>
+</section><section class="slide level2">
+
+<h3 id="parámetros">Parámetros</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/list/</span><span class="sc">{category}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">def</span> <span class="bu">list</span>(category, page<span class="op">=</span><span class="dv">0</span>):</a>
+<a class="sourceLine" id="cb5-3" title="3">    <span class="cf">return</span> {<span class="st">&quot;series&quot;</span>: <span class="ss">f&quot;series from category </span><span class="sc">{</span>category<span class="sc">}</span><span class="ss">, from page </span><span class="sc">{</span>page<span class="sc">}</span><span class="ss">&quot;</span>}</a></code></pre></div>
+</section><section class="slide level2">
+
+<h3 id="validación-automática">Validación automática</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/vota/</span><span class="sc">{puntuacion}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw">def</span>  hello(puntuacion: <span class="bu">int</span>):</a>
+<a class="sourceLine" id="cb6-3" title="3">    <span class="cf">return</span> {<span class="st">&quot;resultado&quot;</span>: <span class="ss">f&quot;Sumo </span><span class="sc">{</span>puntuacion<span class="sc">}</span><span class="ss">&quot;</span>}</a></code></pre></div>
+</section><section class="slide level2">
+
+<h3 id="opciones-de-validación">Opciones de Validación</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb7-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/hola/</span><span class="sc">{name}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">def</span>  hello(name: <span class="bu">str</span> <span class="op">=</span> Path(<span class="st">&quot;desconocido&quot;</span>, min_length<span class="op">=</span><span class="dv">5</span>)):</a>
+<a class="sourceLine" id="cb7-3" title="3">    <span class="cf">return</span> {<span class="st">&quot;msg&quot;</span>: <span class="ss">f&quot;Hola, </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">&quot;</span>}</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/vota/</span><span class="sc">{puntuacion}</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co"># gt implies greater than</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co"># le implies less or equals to</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="kw">def</span> hello(puntuacion: <span class="bu">int</span>,  Path(<span class="dv">0</span>, gt<span class="op">=</span><span class="dv">0</span>, le<span class="op">=</span><span class="dv">10</span>)):</a>
+<a class="sourceLine" id="cb8-5" title="5">   <span class="cf">return</span> {<span class="st">&quot;resultado&quot;</span>: <span class="ss">f&quot;Sumo </span><span class="sc">{</span>puntuacion<span class="sc">}</span><span class="ss">&quot;</span>}</a></code></pre></div>
+</section></section>
+<section><section id="servicio-rest-de-series" class="title-slide slide level1"><h1>Servicio REST de Series</h1></section><section id="servicio-rest-de-series-1" class="slide level2">
+<h2>Servicio REST de Series</h2>
+<ul>
+<li><p>Acceso a Base de Datos de datos sobre series de streaming.</p></li>
+<li><p>Servicio REST sobre dichos datos.</p></li>
+<li><p>Validación de datos.</p></li>
+</ul>
+</section><section id="página-web" class="slide level2">
+<h2>Página web</h2>
+<ul>
+<li><p>Usaremos Bootstrap v5 como framework CSS.</p></li>
+<li><p>Usaremos Vue como frontend.</p></li>
+<li><p>Se ejecuta JS en el cliente.</p></li>
+<li><p>Compondremos la web a partir de los servicios REST.</p></li>
+</ul>
+</section><section id="caso-1-consulta-de-categorías" class="slide level2">
+<h2>Caso 1: Consulta de Categorías</h2>
+<h3 id="servicio-rest-demo">Servicio REST (demo</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb9-1" title="1"><span class="at">@app.get</span>(<span class="st">&quot;/categories&quot;</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">def</span> hello():</a>
+<a class="sourceLine" id="cb9-3" title="3">    <span class="cf">return</span> {<span class="st">&quot;categories&quot;</span>: [{<span class="st">&#39;id&#39;</span>: <span class="dv">0</span>, <span class="st">&#39;text&#39;</span>: <span class="st">&quot;Comedy&quot;</span>}, {<span class="st">&#39;id&#39;</span>: <span class="dv">1</span>, <span class="st">&#39;text&#39;</span>: <span class="st">&quot;Drama&quot;</span>}, {<span class="st">&#39;id&#39;</span>: <span class="dv">2</span>, <span class="st">&#39;text&#39;</span>: <span class="st">&#39;Musical&#39;</span>}]}</a></code></pre></div>
+</section><section class="slide level2">
+
+<h3 id="html">HTML</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb10-1" title="1">            <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;app&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb10-2" title="2">                <span class="kw">&lt;h1&gt;</span>Listado de las Categorías:<span class="kw">&lt;/h1&gt;</span></a>
+<a class="sourceLine" id="cb10-3" title="3">                <span class="kw">&lt;ul&gt;</span></a>
+<a class="sourceLine" id="cb10-4" title="4">             <span class="kw">&lt;li</span><span class="ot"> v-for=</span><span class="st">&quot;category in categories&quot;</span><span class="ot"> :key=</span><span class="st">&quot;category.id&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb10-5" title="5">                 <span class="kw">&lt;strong&gt;</span>{{category.text}}<span class="kw">&lt;/strong&gt;</span></a>
+<a class="sourceLine" id="cb10-6" title="6">             <span class="kw">&lt;/li&gt;</span></a>
+<a class="sourceLine" id="cb10-7" title="7">                <span class="kw">&lt;/ul&gt;</span></a>
+<a class="sourceLine" id="cb10-8" title="8">            <span class="kw">&lt;/div&gt;</span></a></code></pre></div>
+</section><section class="slide level2">
+
+<h3 id="javascript">Javascript</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb11-1" title="1">app <span class="op">=</span> <span class="kw">new</span> <span class="at">Vue</span>(<span class="op">{</span></a>
+<a class="sourceLine" id="cb11-2" title="2">    <span class="dt">el</span><span class="op">:</span> <span class="st">&#39;#app&#39;</span><span class="op">,</span></a>
+<a class="sourceLine" id="cb11-3" title="3">    <span class="at">created</span>() <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">this</span>.<span class="at">fetchData</span>()<span class="op">;</span></a>
+<a class="sourceLine" id="cb11-5" title="5">    <span class="op">},</span></a>
+<a class="sourceLine" id="cb11-6" title="6">    <span class="dt">data</span><span class="op">:</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-7" title="7">        <span class="dt">categories</span><span class="op">:</span> []</a>
+<a class="sourceLine" id="cb11-8" title="8">    <span class="op">},</span></a>
+<a class="sourceLine" id="cb11-9" title="9">    <span class="dt">methods</span><span class="op">:</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-10" title="10">        <span class="at">fetchData</span>() <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-11" title="11">            <span class="va">axios</span>.<span class="at">get</span>(<span class="st">&#39;http://localhost:8000/categories&#39;</span>).<span class="at">then</span>(response <span class="kw">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-12" title="12">                <span class="kw">this</span>.<span class="at">categories</span> <span class="op">=</span> <span class="va">response</span>.<span class="va">data</span>.<span class="at">categories</span><span class="op">;</span></a>
+<a class="sourceLine" id="cb11-13" title="13">            <span class="op">}</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb11-14" title="14">        <span class="op">}</span></a>
+<a class="sourceLine" id="cb11-15" title="15">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="op">}</span>)<span class="op">;</span></a></code></pre></div>
+<p>–</p>
+</section><section id="resultado" class="slide level2">
+<h2>Resultado</h2>
+<p><img src="categorias.png" width="80%"></img></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@3.9.1//lib/js/head.min.js"></script>
+  <script src="https://unpkg.com/reveal.js@3.9.1//js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://unpkg.com/reveal.js@3.9.1//lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://unpkg.com/reveal.js@3.9.1//plugin/zoom-js/zoom.js', async: true },
+          { src: 'https://unpkg.com/reveal.js@3.9.1//plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
