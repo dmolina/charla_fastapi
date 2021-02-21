@@ -16,7 +16,7 @@ instalar con:
 
 ```sh
 $ pip install poetry # Para gestionar dependencias
-$ cd demo # Ir al directorio de los recursos webs
+$ cd demo # Ir al directorio de los recursos REST
 $ poetry install # Instala las dependencias necesarias
 ```
 
