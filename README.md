@@ -16,8 +16,43 @@ instalar con:
 
 ```sh
 $ pip install poetry # Para gestionar dependencias
+$ cd demo # Ir a la 
+$ poetry install # Instala las dependencias necesarias
 ```
 
+## Ejecutar
+
+Para lanzar los servicios REST es necesario ejecutar:
+
 ```sh
-$ poetry install # Instala las dependencias existentes
+$ cd demo
+$ hypercorn <name>:app --reload
 ```
+
+Donde <name> puede ser:
+
+- **test:** ejemplos usados en la presentación.
+
+- **seriesfliz:** Ejemplo de demo en modo estático (sin Base de Datos).
+
+La opción *reload* permite editar el fichero y se se aplica directamente.
+
+La anterior es la opción recomendada, por la opción *reload*. De todos modos, 
+para ejectarlo también se puede usar:
+
+```sh
+$ python server.py
+```
+
+
+
+
+
+La web de ejemplo es totalmente estática, solo requiere JavaScript. Para
+ejecutarlo se puede usar el siguiente comando en el directorio del proyecto:
+
+```sh
+$ python -m http.server 8100 >/dev/null
+```
+
+Eso permitirá acceder a la página web de demo con [http://localhost:8100/page.html](http://localhost:8100/page.html)
