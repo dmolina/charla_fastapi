@@ -1,12 +1,13 @@
-app = new Vue({
-    el: '#app',
+const { createApp } = Vue
+
+createApp({
     created() {
         this.fetchData();
     },
-    data: {
-        categories: [],
+    data() {
+        return {categories: [],
         selected: '',
-        series: [],
+                series: []};
     },
     computed: {
         // a computed getter
@@ -39,4 +40,4 @@ app = new Vue({
              }
          }
     }
-});
+}).mount('#app');
