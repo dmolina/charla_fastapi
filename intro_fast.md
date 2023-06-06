@@ -2,12 +2,15 @@
 pagetitle: "Servicios REST con FastAPI"
 theme: sky
 author: "Daniel Molina Cabrera"
+format:
+  revealjs:
+    slide-number: true
 ---
 
 ## Servicios REST con
-<img src="slides/FastAPI.jpg" width="30%"></img><br>
+<img src="slides/FastAPI2.png" width="80%"></img><br>
 
-<center>Daniel Molina Cabrera<br>
+<center>Por: Daniel Molina Cabrera<br>
 (http://dmolina.github.io)
 </center>
 
