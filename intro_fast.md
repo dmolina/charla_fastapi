@@ -11,7 +11,7 @@ format:
 <img src="slides/FastAPI2.png" width="80%"></img><br>
 
 <center>Por: Daniel Molina Cabrera<br>
-(http://dmolina.github.io)
+[http://www.danimolina.net](http://www.danimolina.net)
 </center>
 
 ---
@@ -19,7 +19,7 @@ format:
 ## ¿Quién soy yo?
 
 <ul style="margin=300px">
-<li>Profesor Titular de Informática de la Universidad de Granada</li>
+<li>Profesor Titular de Informática de la UGR.</li>
 <li>Experto en Inteligencia Artificial.</li>
 <li>Desarrollador/Usuario de Python durante más de 10 años.</li></ul>
 <img src="yo_serio.png" width="20%" style="float: center"/>
@@ -29,8 +29,8 @@ format:
 ## ¿Quién soy yo?
 
 <ul style="margin=300px">
-<li> Partidario convencido del Software Libre</li>
-<li> <i>Linuxero</i> convencido.</li>
+<li> Partidario convencido del Software Libre.</li>
+<li> <i>Linuxero</i> convencido, y usuario de Emacs.</li>
 <li> Gran fan de Python.</li>
 </ul>
 <img src="yo_indiana.jpg" width="30%" style="float: center"></img>
@@ -102,6 +102,17 @@ for name in ["Amalia", "Arturo"]:
 
 <img src="slides/box_python.png" class="plain" width="50%">
 
+---
+
+##  Usado en *Machine Learning*
+
+- Lenguaje muy usado en *Machine Learning*.
+
+<img src="slides/ML.png" class="plain" width="80%">
+
+- Se diseñó para integrarlas con sistemas webs.
+
+
 # demo de FastAPI
 
 ---
@@ -164,23 +175,23 @@ def  hello(puntuacion: int):
     return {"resultado": f"Sumo {puntuacion}"}
 ```
 
----
+<!-- --- -->
 
-### Opciones de Validación
+<!-- ### Opciones de Validación -->
 
-```python
-@app.get("/hola/{name}")
-def  hello(name: str = Path("desconocido", min_length=5)):
-    return {"msg": f"Hola, {name}"}
-```
+<!-- ```python -->
+<!-- @app.get("/hola/{name}") -->
+<!-- def  hello(name: str = Path("desconocido", min_length=5)): -->
+<!--     return {"msg": f"Hola, {name}"} -->
+<!-- ``` -->
 
-```python
-@app.get("/vota/{puntuacion}")
-# gt implies greater than
-# le implies less or equals to
-def hello(puntuacion: int,  Path(0, gt=0, le=10)):
-   return {"resultado": f"Sumo {puntuacion}"}
-```
+<!-- ```python -->
+<!-- @app.get("/vota/{puntuacion}") -->
+<!-- # gt implies greater than -->
+<!-- # le implies less or equals to -->
+<!-- def hello(puntuacion: int,  Path(0, gt=0, le=10)): -->
+<!--    return {"resultado": f"Sumo {puntuacion}"} -->
+<!-- ``` -->
 
 # Servicio REST de Series
 
