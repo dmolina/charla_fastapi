@@ -35,6 +35,10 @@ format:
 </ul>
 <img src="yo_indiana.jpg" width="30%" style="float: center"></img>
 
+## Material del taller
+
+<img src="slides/qr.png" width="50%" style="float: center"></img>
+
 # Servicios REST
 
 ## ¿Qué son servicios REST?
